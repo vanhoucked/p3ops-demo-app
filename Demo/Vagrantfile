@@ -67,7 +67,7 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
 
-  config.disksize.size = "50GB"
+  config.vm.disk :disk, name:"database", size: "50GB"
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
 
-  config.vm.provision "ansible" do |ansible|
+  config.vm.provision "ansible_local" do |ansible|
     ansible.playbook = "playbook.yml"
   end
 
