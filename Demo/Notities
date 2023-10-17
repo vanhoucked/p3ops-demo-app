@@ -1,0 +1,9 @@
+https://developer.hashicorp.com/vagrant/docs/vagrantfile/machine_settings
+
+vagrant init maakt vagrant file aan
+
+https://developer.hashicorp.com/vagrant/docs/networking
+
+https://developer.hashicorp.com/vagrant/docs/provisioning/ansible
+
+{{ item }} is variabele die tweemaal gebruikt wordt met de waarden uit with_items
