@@ -2,15 +2,25 @@
 - name: install PostgreSQL
   hosts: all
   become: yes
-  tasks:
+  vars:
+    db_name: "test_db"
+    db_user: "test_user"
+    db_password: "test_password"
+
+  pre_tasks:
     - name: install PostgreSQL and dependencies
       package:
         name: "{{ item }}"
         state: present
       with_items:
+        - bash
+        - openssl
         - postgresql-server
         - postgresql-contrib
+        - acl
+        - python3-psycopg2
 
+  tasks:
     - name: initialise PostgreSQL
       command: postgresql-setup initdb
 
@@ -19,3 +29,33 @@
         name: postgresql
         state: started
         enabled: yes
+
+    - name: create database
+      become: true
+      become_user: postgres
+      postgresql_db:
+        name: "{{ db_name }}"
+        state: present
+
+    - name: create user
+      become: true
+      become_user: postgres
+      postgresql_user:
+        db={{ db_name }}
+        name={{ db_user }}
+        password={{ db_password }}
+        priv=ALL
+        state=present
+
+    - name: allow md5 connection
+      postgresql_pg_hba:
+        dest: "~/data/pg_hba.conf"
+        contype: local
+        databases: all
+        address: all
+        method: md5
+        users: "{{ db_user }}"
+        create: true
+      become: yes
+      become_user: postgres
+      notify: restart postgres
