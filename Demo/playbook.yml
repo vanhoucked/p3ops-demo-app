@@ -19,16 +19,3 @@
         name: postgresql
         state: started
         enabled: yes
-
-    - name: create database
-      postgresql_db:
-        name: "test_database"
-        encoding: UTF8
-      become: yes
-
-    - name: create user
-      postgresql_user:
-        db: "test_database"
-        name: "test_user"
-        password: "test_password"
-      become: yes
